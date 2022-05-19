@@ -1,3 +1,1 @@
-console.log('Hello World')
-
-export default {}
+export * from './Localities'
