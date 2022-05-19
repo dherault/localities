@@ -1,0 +1,20 @@
+{
+  "name": "localities-example",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node src/index.ts",
+    "start:watch": "nodemon --watch src --ext ts --exec \"npm start\"",
+    "dev": "npm run start:watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "localities": "^0.0.1"
+  },
+  "devDependencies": {
+    "ts-node": "^10.7.0"
+  }
+}
