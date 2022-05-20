@@ -8,6 +8,9 @@ services:
     restart: always
     environment:
       POSTGRES_PASSWORD: password
+      POSTGRES_DB: phenomenom
+    ports:
+      - 5432:5432
 
   adminer:
     image: adminer

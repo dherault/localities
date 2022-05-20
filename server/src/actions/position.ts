@@ -1,9 +1,20 @@
 import { Socket } from 'socket.io'
 
-function position(socket: Socket, message: any) {
+import db from '../db'
+
+async function position(socket: Socket, message: any) {
   const { x, y, z } = message
 
-  console.log(socket.id, x, y, z)
+  const [player] = await db.Player.findOrCreate({
+    where: {
+      socketId: socket.id,
+      positionX: x,
+      positionY: y,
+      positionZ: z,
+    },
+  })
+
+  console.log(player.id, x, y, z)
 }
 
 export default position

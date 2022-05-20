@@ -1,5 +1,5 @@
 {
-  "name": "localities-example-back",
+  "name": "localities-server",
   "version": "0.0.0",
   "description": "",
   "main": "index.js",
@@ -7,13 +7,12 @@
     "start": "ts-node src/index.ts",
     "start:watch": "nodemon --watch src --ext ts --exec \"npm start\"",
     "dev": "npm run start:watch",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "db:create": "ts-node src/db/scripts/createDatabase.ts",
+    "db:drop": "ts-node src/db/scripts/dropDatabase.ts"
   },
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@google-cloud/firestore": "^5.0.2",
-    "localities": "^0.0.1",
     "pg": "^8.7.3",
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.19.2",

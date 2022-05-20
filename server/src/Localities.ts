@@ -32,7 +32,14 @@ export default class Localities {
     socket.on('disconnect', () => this.handleDisconnect(socket))
 
     Object.entries(this.actionHandlersRegistry).forEach(([action, handler]) => {
-      socket.on(action, message => handler(socket, message))
+      socket.on(action, message => {
+        try {
+          handler(socket, message)
+        }
+        catch (error) {
+          console.error(error)
+        }
+      })
     })
   }
 

@@ -1,11 +1,8 @@
-import { Sequelize } from 'sequelize'
+import sequelize from './sequelize'
 
-export default new Sequelize(
-  'localhost:5432',
-  'postgres',
-  'password',
-  {
-    host: 'localhost',
-    dialect: 'postgres',
-  }
-)
+import Player from './models/Player'
+
+export default {
+  sequelize,
+  Player,
+}
