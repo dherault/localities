@@ -1,1 +1,0 @@
-import Localities from 'localities'

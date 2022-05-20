@@ -16,8 +16,6 @@ function Home() {
     players.push(<Player key={i} />)
   }
 
-  console.log('players', players)
-
   return (
     <Section
       container

@@ -1,5 +1,5 @@
 {
-  "name": "localities-example",
+  "name": "localities-example-back",
   "version": "0.0.0",
   "description": "",
   "main": "index.js",
@@ -12,9 +12,11 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "localities": "^0.0.1"
+    "localities": "^0.0.1",
+    "socket.io": "^4.5.1"
   },
   "devDependencies": {
+    "nodemon": "^2.0.16",
     "ts-node": "^10.7.0"
   }
 }

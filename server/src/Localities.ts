@@ -1,24 +1,28 @@
+import http from 'http'
+
 import { Server, Socket } from 'socket.io'
 
-type LocalitiesOptions = {
-  // port?: number
-}
-
-type ActionHandler = (socket: Socket, message: any) => void
+type ActionHandlerType = (socket: Socket, message: any) => void
 
 export default class Localities {
   io: Server
 
-  actionHandlersRegistry: { [action: string]: ActionHandler }
+  actionHandlersRegistry: { [action: string]: ActionHandlerType }
 
-  constructor(options: LocalitiesOptions) {
-    this.io = new Server()
+  constructor() {
+    const server = http.createServer()
+
+    this.io = new Server(server, {
+      cors: {
+        origin: '*', // TODO
+      },
+    })
     this.actionHandlersRegistry = {}
 
     this.io.on('connection', socket => this.handleConnect(socket))
   }
 
-  registerActionHandler(action: string, handler: ActionHandler) {
+  registerActionHandler(action: string, handler: ActionHandlerType) {
     this.actionHandlersRegistry[action] = handler
   }
 

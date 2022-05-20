@@ -1,0 +1,13 @@
+{
+  "name": "example",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "npm run dev:back & npm run dev:front",
+    "dev:back": "(cd back && npm run dev)",
+    "dev:front": "(cd front && npm start)"
+  },
+  "author": "",
+  "license": "MIT"
+}
