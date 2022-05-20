@@ -8,7 +8,8 @@
     "start:watch": "nodemon --watch src --ext ts --exec \"npm start\"",
     "dev": "npm run start:watch",
     "db:create": "ts-node src/db/scripts/createDatabase.ts",
-    "db:drop": "ts-node src/db/scripts/dropDatabase.ts"
+    "db:drop": "ts-node src/db/scripts/dropDatabase.ts",
+    "db:reset": "npm run db:drop && npm run db:create"
   },
   "author": "",
   "license": "MIT",

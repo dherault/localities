@@ -1,17 +1,14 @@
 import { Socket } from 'socket.io'
 
-import db from '../db'
+import { PlayerModel } from '../db/models/Player'
 
-async function position(socket: Socket, message: any) {
+async function position(player: PlayerModel, socket: Socket, message: any) {
   const { x, y, z } = message
 
-  const [player] = await db.Player.findOrCreate({
-    where: {
-      socketId: socket.id,
-      positionX: x,
-      positionY: y,
-      positionZ: z,
-    },
+  await player.update({
+    positionX: x,
+    positionY: y,
+    positionZ: z,
   })
 
   console.log(player.id, x, y, z)
