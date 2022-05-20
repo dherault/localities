@@ -30,8 +30,11 @@ function Player() {
     let currentX = player.x
     let currentY = player.y
     let objective = createPosition()
+    let counter = Math.floor(Math.random() * 10)
 
     function goToObjective() {
+      counter++
+
       const { x, y } = objective
 
       const dx = x - currentX
@@ -46,6 +49,11 @@ function Player() {
         currentY += speed * dy / distance
 
         setPlayer(x => ({ ...x, x: currentX, y: currentY }))
+
+        if (counter % 100 === 0) {
+          counter = 0
+          socket.emit('position', { x: currentX, y: currentY, z: 0 })
+        }
       }
 
       if (!paused) {
