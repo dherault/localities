@@ -5,6 +5,8 @@ import { Server, Socket } from 'socket.io'
 import db from './db'
 import { PlayerModel } from './db/models/Player'
 
+import { periodicPeriod } from './configuration'
+
 type ActionHandlerType = (player: PlayerModel, socket: Socket, message: any) => void
 type PeriodicHandlerType = (player: PlayerModel, socket: Socket) => void
 
@@ -49,7 +51,9 @@ export default class Localities {
       },
     })
 
-    socket.on('disconnect', () => this.handleDisconnect(socket))
+    await player.update({ connected: true })
+
+    socket.on('disconnect', () => this.handleDisconnect(player, socket))
 
     Object.entries(this.actionHandlersRegistry).forEach(([name, handler]) => {
       socket.on(name, message => {
@@ -66,11 +70,13 @@ export default class Localities {
       Object.values(this.periodicHandlersRegistry).forEach(handler => {
         handler(player, socket)
       })
-    }, 200)
+    }, periodicPeriod)
   }
 
-  handleDisconnect(socket: Socket) {
+  async handleDisconnect(player: PlayerModel, socket: Socket) {
     console.log(`Disconnected: ${socket.id}`)
+
+    await player.update({ connected: false })
 
     clearInterval(this.socketIdToIntervalId[socket.id])
   }

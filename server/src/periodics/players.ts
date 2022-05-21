@@ -3,22 +3,23 @@ import { Socket } from 'socket.io'
 import db from '../db'
 import { PlayerModel } from '../db/models/Player'
 
-const radius = 12
+import { positionRadius } from '../configuration'
 
 async function players(player: PlayerModel, socket: Socket) {
   const players = await db.Player.findAll({
     where: {
-      positionX: {
-        [db.Sequelize.Op.gte]: player.positionX - radius,
-        [db.Sequelize.Op.lte]: player.positionX + radius,
+      connected: true,
+      x: {
+        [db.Sequelize.Op.gte]: player.x - positionRadius,
+        [db.Sequelize.Op.lte]: player.x + positionRadius,
       },
-      positionY: {
-        [db.Sequelize.Op.gte]: player.positionY - radius,
-        [db.Sequelize.Op.lte]: player.positionY + radius,
+      y: {
+        [db.Sequelize.Op.gte]: player.y - positionRadius,
+        [db.Sequelize.Op.lte]: player.y + positionRadius,
       },
-      positionZ: {
-        [db.Sequelize.Op.gte]: player.positionZ - radius,
-        [db.Sequelize.Op.lte]: player.positionZ + radius,
+      z: {
+        [db.Sequelize.Op.gte]: player.z - positionRadius,
+        [db.Sequelize.Op.lte]: player.z + positionRadius,
       },
     },
   })
@@ -27,9 +28,12 @@ async function players(player: PlayerModel, socket: Socket) {
     .filter(p => p.id !== player.id)
     .map(p => ({
       id: p.id,
-      positionX: p.positionX,
-      positionY: p.positionY,
-      positionZ: p.positionZ,
+      x: p.x,
+      y: p.y,
+      z: p.z,
+      dx: p.dx,
+      dy: p.dy,
+      dz: p.dz,
     }))
   )
 }

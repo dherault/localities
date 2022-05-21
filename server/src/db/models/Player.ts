@@ -6,22 +6,38 @@ export interface PlayerModel extends Model<InferAttributes<PlayerModel>, InferCr
   // Some fields are optional when calling PlayerModel.create() or PlayerModel.build()
   id?: number
   socketId: string
-  positionX: number
-  positionY: number
-  positionZ: number
+  connected: boolean
+  x: number
+  y: number
+  z: number
+  dx: number
+  dy: number
+  dz: number
 }
 
 const Player = sequelize.define<PlayerModel>('Player', {
   socketId: {
     type: DataTypes.STRING,
   },
-  positionX: {
+  connected: {
+    type: DataTypes.BOOLEAN,
+  },
+  x: {
     type: DataTypes.FLOAT,
   },
-  positionY: {
+  y: {
     type: DataTypes.FLOAT,
   },
-  positionZ: {
+  z: {
+    type: DataTypes.FLOAT,
+  },
+  dx: {
+    type: DataTypes.FLOAT,
+  },
+  dy: {
+    type: DataTypes.FLOAT,
+  },
+  dz: {
     type: DataTypes.FLOAT,
   },
 }, {

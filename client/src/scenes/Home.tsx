@@ -1,37 +1,83 @@
-import { useState } from 'react'
-import { Button, Div, Flex, H1, Section } from 'honorable'
+import { ReactNode, useState } from 'react'
+import { Button, Div, Flex, H1, P, Section, Slider } from 'honorable'
 
 import Player from '../components/Player'
 
+type PlayerType = {
+  id: number
+  x: number
+  y: number
+}
+
 function Home() {
-  const [nPlayers, setNPlayers] = useState(0)
-  const [curentPlayer, setCurrentPlayer] = useState(-1)
+  const [channel, setChannel] = useState(0)
+  const [nPlayers, setNPlayers] = useState(32)
+  const [players, setPlayers] = useState<PlayerType[]>([])
+  const [curentPlayerId, setCurrentPlayerId] = useState(-1)
 
-  console.log('curentPlayer', curentPlayer)
+  function handleCreatePlayers() {
+    let i = 0
 
-  function handleCreate10Players() {
-    setNPlayers(x => x + 10)
+    const intervalId = setInterval(() => {
+      i++
+
+      setPlayers(x => [
+        ...x,
+        {
+          id: Math.random(),
+          x: Math.random() * 100,
+          y: Math.random() * 100,
+        },
+      ])
+
+      if (i === nPlayers) {
+        clearInterval(intervalId)
+      }
+    }, 100)
   }
 
-  function handleCreate100Players() {
-    setNPlayers(x => x + 100)
+  function renderCorners() {
+    return (
+      <>
+        <Div
+          position="absolute"
+          top={0}
+          left={0}
+          width={0}
+          height={0}
+          borderTop="300px solid transparency(palegreen, 50)"
+          borderRight="300px solid transparent"
+        />
+        <Div
+          position="absolute"
+          bottom={0}
+          right={0}
+          width={0}
+          height={0}
+          borderBottom="300px solid transparency(palegreen, 50)"
+          borderLeft="300px solid transparent"
+        />
+      </>
+    )
   }
 
   function renderPlayers() {
-    const players = []
+    const playerNodes: ReactNode[] = []
 
-    for (let i = 0; i < nPlayers; i++) {
-      players.push(
+    players.forEach(player => {
+      playerNodes.push(
         <Player
-          key={i}
-          hidden={curentPlayer > -1 && i !== curentPlayer}
-          selected={curentPlayer === i}
-          onClick={() => setCurrentPlayer(curentPlayer === i ? -1 : i)}
+          key={player.id}
+          player={player}
+          channel={channel}
+          hidden={curentPlayerId > -1 && player.id !== curentPlayerId}
+          selected={curentPlayerId === player.id}
+          onClick={() => setCurrentPlayerId(curentPlayerId === player.id ? -1 : player.id)}
         />
       )
-    }
+    })
 
-    return players
+    return playerNodes
   }
 
   return (
@@ -43,27 +89,47 @@ function Home() {
       display="flex"
       flexDirection="column"
     >
-      <Flex>
+      <Flex align="center">
         <H1>Localities</H1>
-        <Button
+        <Slider
           ml={2}
-          onClick={handleCreate10Players}
-        >
-          Create 10 players
-        </Button>
+          min={1}
+          max={100}
+          step={1}
+          value={nPlayers}
+          onChange={(event, value) => setNPlayers(value)}
+        />
         <Button
-          ml={2}
-          onClick={handleCreate100Players}
+          ml={1}
+          onClick={handleCreatePlayers}
         >
-          Create 100 players
+          Create {nPlayers} players
         </Button>
       </Flex>
+      <Flex
+        mt={1}
+        align="center"
+      >
+        <Button
+          onClick={() => setChannel(x => x - 1)}
+        >
+          -
+        </Button>
+        <Button
+          ml={0.5}
+          onClick={() => setChannel(x => x + 1)}
+        >
+          +
+        </Button>
+        <P ml={0.5}>Channel {channel}</P>
+      </Flex>
       <Div
-        mt={2}
+        mt={1}
         flexGrow={1}
         border="1px solid border"
         position="relative"
       >
+        {renderCorners()}
         {renderPlayers()}
       </Div>
     </Section>

@@ -7,5 +7,6 @@ export default new Sequelize(
   {
     host: 'localhost',
     dialect: 'postgres',
+    logging: false,
   }
 )
