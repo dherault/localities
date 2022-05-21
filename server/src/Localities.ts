@@ -5,6 +5,8 @@ import { Server, Socket } from 'socket.io'
 import db from './db'
 import { PlayerModel } from './db/models/Player'
 
+import assignChannel from './domain/assignChannel'
+
 import { periodicPeriod } from './configuration'
 
 type ActionHandlerType = (player: PlayerModel, socket: Socket, message: any) => void
@@ -51,9 +53,13 @@ export default class Localities {
       },
     })
 
-    await player.update({ connected: true })
-
     socket.on('disconnect', () => this.handleDisconnect(player, socket))
+
+    const channel = await assignChannel(player)
+
+    await player.update({ connected: true, channel })
+
+    socket.emit('channel', channel)
 
     Object.entries(this.actionHandlersRegistry).forEach(([name, handler]) => {
       socket.on(name, message => {
@@ -68,7 +74,12 @@ export default class Localities {
 
     this.socketIdToIntervalId[socket.id] = setInterval(() => {
       Object.values(this.periodicHandlersRegistry).forEach(handler => {
-        handler(player, socket)
+        try {
+          handler(player, socket)
+        }
+        catch (error) {
+          console.error(error)
+        }
       })
     }, periodicPeriod)
   }

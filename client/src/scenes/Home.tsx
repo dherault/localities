@@ -33,7 +33,7 @@ function Home() {
       if (i === nPlayers) {
         clearInterval(intervalId)
       }
-    }, 100)
+    }, 250)
   }
 
   function renderCorners() {
@@ -111,7 +111,7 @@ function Home() {
         align="center"
       >
         <Button
-          onClick={() => setChannel(x => x - 1)}
+          onClick={() => setChannel(x => Math.max(0, x - 1))}
         >
           -
         </Button>

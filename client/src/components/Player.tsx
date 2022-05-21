@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useMemo, useState } from 'react'
+import { ReactNode, memo, useEffect, useMemo, useState } from 'react'
 import { io } from 'socket.io-client'
 
 type PositionType = {
@@ -17,7 +17,7 @@ function createPosition() {
   }
 }
 
-const radius = 4
+const radius = 6
 const speed = 0.05 // px / second
 const positionEmitFrequency = 33
 const sprintFrequency = 333
@@ -27,20 +27,25 @@ function Player({ player, channel, selected, hidden, onClick }: any) {
   const socket = useMemo(() => io('ws://localhost:5001'), [])
   const [suroundingPlayers, setSuroundingPlayers] = useState<any[]>([])
   const [isSprinting, setIsSprinting] = useState(Math.random() > 0.75)
-  const [currentChannel, setCurrentChannel] = useState(0)
-  const [nextChannel, setNextChannel] = useState(1)
-
+  const [currentChannel, setCurrentChannel] = useState(-1)
+  const [nextChannel, setNextChannel] = useState(0)
   const [actualPlayer, setActualPlayer] = useState<PlayerType>(player)
+
+  const isCurrentChannel = currentChannel === channel
 
   useEffect(() => {
     socket.on('channel', (channel: number) => {
+      if (currentChannel === -1) {
+        setCurrentChannel(channel)
+      }
+
       setNextChannel(channel)
     })
 
     return () => {
       socket.off('channel')
     }
-  }, [socket])
+  }, [socket, currentChannel])
 
   useEffect(() => {
     const { x, y } = actualPlayer
@@ -161,7 +166,7 @@ function Player({ player, channel, selected, hidden, onClick }: any) {
     return (
       <div
         style={{
-          display: currentChannel === channel ? 'block' : 'none',
+          display: isCurrentChannel ? 'block' : 'none',
           opacity: hidden ? 0.333 : 1,
           position: 'absolute',
           top: `calc(${actualPlayer.y}% - ${radius}px - 12px)`,
@@ -180,7 +185,7 @@ function Player({ player, channel, selected, hidden, onClick }: any) {
     <>
       <div
         style={{
-          display: currentChannel === channel ? 'block' : 'none',
+          display: isCurrentChannel ? 'block' : 'none',
           opacity: hidden ? 0.333 : 1,
           position: 'absolute',
           top: `calc(${actualPlayer.y}% - ${radius}px)`,
@@ -192,9 +197,9 @@ function Player({ player, channel, selected, hidden, onClick }: any) {
         }}
         onClick={onClick}
       />
-      {currentChannel === channel && !!selected && renderSuroundingPlayers()}
-      {currentChannel === channel && !!selected && renderSuroundingRadius()}
-      {currentChannel === channel && currentChannel !== nextChannel && renderChannelChange()}
+      {isCurrentChannel && !!selected && renderSuroundingPlayers()}
+      {isCurrentChannel && !!selected && renderSuroundingRadius()}
+      {isCurrentChannel && currentChannel !== nextChannel && renderChannelChange()}
     </>
   )
 }
@@ -238,4 +243,4 @@ function SuroundingPlayer({ player }: any) {
   )
 }
 
-export default Player
+export default memo(Player)

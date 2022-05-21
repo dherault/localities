@@ -9,6 +9,7 @@ async function players(player: PlayerModel, socket: Socket) {
   const players = await db.Player.findAll({
     where: {
       connected: true,
+      channel: player.channel,
       x: {
         [db.Sequelize.Op.gte]: player.x - positionRadius,
         [db.Sequelize.Op.lte]: player.x + positionRadius,

@@ -7,6 +7,7 @@ export interface PlayerModel extends Model<InferAttributes<PlayerModel>, InferCr
   id?: number
   socketId: string
   connected: boolean
+  channel: number
   x: number
   y: number
   z: number
@@ -21,6 +22,9 @@ const Player = sequelize.define<PlayerModel>('Player', {
   },
   connected: {
     type: DataTypes.BOOLEAN,
+  },
+  channel: {
+    type: DataTypes.INTEGER,
   },
   x: {
     type: DataTypes.FLOAT,
