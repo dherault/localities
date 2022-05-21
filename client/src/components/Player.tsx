@@ -33,6 +33,10 @@ function Player({ player, channel, selected, hidden, onClick }: any) {
 
   const isCurrentChannel = currentChannel === channel
 
+  useEffect(() => () => {
+    socket.disconnect()
+  }, [socket])
+
   useEffect(() => {
     socket.on('channel', (channel: number) => {
       if (currentChannel === -1) {

@@ -1,5 +1,5 @@
-import { ReactNode, useState } from 'react'
-import { Button, Div, Flex, H1, P, Section, Slider } from 'honorable'
+import { ReactNode, useEffect, useState } from 'react'
+import { Button, Div, Flex, H1, P, Section, Slider, Switch } from 'honorable'
 
 import Player from '../components/Player'
 
@@ -14,6 +14,30 @@ function Home() {
   const [nPlayers, setNPlayers] = useState(32)
   const [players, setPlayers] = useState<PlayerType[]>([])
   const [curentPlayerId, setCurrentPlayerId] = useState(-1)
+  const [isRandomized, setIsRandomized] = useState(true)
+
+  const hasPlayers = players.length > 0
+
+  useEffect(() => {
+    if (!(isRandomized && hasPlayers)) return
+
+    const intervalId = setInterval(() => {
+      if (Math.random() >= 0.5) {
+        setPlayers(x => [...x, { id: Math.random(), x: Math.random() * 100, y: Math.random() * 100 }])
+      }
+      else {
+        setPlayers(x => {
+          const index = Math.floor(Math.random() * x.length)
+
+          return [...x.slice(0, index), ...x.slice(index + 1)]
+        })
+      }
+    }, 1000)
+
+    return () => {
+      clearInterval(intervalId)
+    }
+  }, [isRandomized, hasPlayers])
 
   function handleCreatePlayers() {
     let i = 0
@@ -105,6 +129,14 @@ function Home() {
         >
           Create {nPlayers} players
         </Button>
+        <Switch
+          ml={1}
+          checked={isRandomized}
+          onChange={event => setIsRandomized(!!event.target.checked)}
+        />
+        <P ml={0.5}>
+          {isRandomized ? 'Randomized' : 'Not randomized'}
+        </P>
       </Flex>
       <Flex
         mt={1}

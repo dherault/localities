@@ -10,7 +10,6 @@ async function assignChannel(player: PlayerModel) {
   while (true) {
     const n = await db.Player.count({ where: { connected: true, channel } })
 
-    console.log('channel, n', channel, n)
     if (n < maxPlayersPerChannel) return channel
 
     channel++

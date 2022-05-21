@@ -45,7 +45,7 @@ export default class Localities {
   }
 
   async handleConnect(socket: Socket) {
-    console.log(`Connected: ${socket.id}`)
+    console.log('Player', socket.id, 'connected!')
 
     const [player] = await db.Player.findOrCreate({
       where: {
@@ -58,6 +58,8 @@ export default class Localities {
     const channel = await assignChannel(player)
 
     await player.update({ connected: true, channel })
+
+    console.log('Player', socket.id, 'assigned to channel', channel)
 
     socket.emit('channel', channel)
 
@@ -85,7 +87,7 @@ export default class Localities {
   }
 
   async handleDisconnect(player: PlayerModel, socket: Socket) {
-    console.log(`Disconnected: ${socket.id}`)
+    console.log('Player', socket.id, 'disconnected!')
 
     await player.update({ connected: false })
 
