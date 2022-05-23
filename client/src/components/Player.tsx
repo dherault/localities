@@ -185,11 +185,12 @@ function Player({ player, channel, selected, hidden, onClick }: any) {
     )
   }
 
+  if (!isCurrentChannel) return null
+
   return (
     <>
       <div
         style={{
-          display: isCurrentChannel ? 'block' : 'none',
           opacity: hidden ? 0.333 : 1,
           position: 'absolute',
           top: `calc(${actualPlayer.y}% - ${radius}px)`,
@@ -201,9 +202,9 @@ function Player({ player, channel, selected, hidden, onClick }: any) {
         }}
         onClick={onClick}
       />
-      {isCurrentChannel && !!selected && renderSuroundingPlayers()}
-      {isCurrentChannel && !!selected && renderSuroundingRadius()}
-      {isCurrentChannel && currentChannel !== nextChannel && renderChannelChange()}
+      {!!selected && renderSuroundingPlayers()}
+      {!!selected && renderSuroundingRadius()}
+      {currentChannel !== nextChannel && renderChannelChange()}
     </>
   )
 }

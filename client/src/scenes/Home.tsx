@@ -132,7 +132,7 @@ function Home() {
         <Switch
           ml={1}
           checked={isRandomized}
-          onChange={event => setIsRandomized(!!event.target.checked)}
+          onChange={event => setIsRandomized(event.target.checked)}
         />
         <P ml={0.5}>
           {isRandomized ? 'Randomized' : 'Not randomized'}
